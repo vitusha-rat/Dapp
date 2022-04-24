@@ -1,0 +1,17 @@
+{"ETH": {
+    "addresses": {
+      "Staking": "0xb9FA607DD289DF4428a80f071FEaB22874ec275b",
+      "TokenA": "0xC7827ca5aAC39A039269B658766aC27e0dbAFda8",
+      "TokenB": "0x6a256362D6E407E30E4B595Dc557C2C26Fd875e2"
+    },
+    "provider": "https://speedy-nodes-nyc.moralis.io/98446ed04f340c3f804e2ee6/eth/rinkeby",
+    "chainId":4, 
+    "name": "Rinkeby test network",
+    "scan": "https://rinkeby.etherscan.io/",
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "rpcUrl": "https://rinkeby-light.eth.linkpool.io/"
+  }}
