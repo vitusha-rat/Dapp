@@ -1,21 +1,41 @@
 {
     "Staking": [
         {
-            "inputs": [{ "internalType": "address", "name": "_tokenA", "type": "address" }],
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_tokenA",
+                    "type": "address"
+                }
+            ],
             "stateMutability": "nonpayable",
             "type": "constructor"
         },
         {
             "inputs": [],
             "name": "TokenA",
-            "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
+            "outputs": [
+                {
+                    "internalType": "contract IERC20",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
             "stateMutability": "view",
             "type": "function"
         },
         {
             "inputs": [
-                { "internalType": "uint8", "name": "_period", "type": "uint8" },
-                { "internalType": "uint16", "name": "_rates", "type": "uint16" }
+                {
+                    "internalType": "uint8",
+                    "name": "_period",
+                    "type": "uint8"
+                },
+                {
+                    "internalType": "uint16",
+                    "name": "_rates",
+                    "type": "uint16"
+                }
             ],
             "name": "changeRates",
             "outputs": [],
@@ -25,28 +45,60 @@
         {
             "inputs": [],
             "name": "getRemainingTime",
-            "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "stateMutability": "view",
             "type": "function"
         },
         {
             "inputs": [],
             "name": "owner",
-            "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
-            "name": "periodRates",
-            "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
             "stateMutability": "view",
             "type": "function"
         },
         {
             "inputs": [
-                { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-                { "internalType": "uint8", "name": "_period", "type": "uint8" }
+                {
+                    "internalType": "uint8",
+                    "name": "",
+                    "type": "uint8"
+                }
+            ],
+            "name": "periodRates",
+            "outputs": [
+                {
+                    "internalType": "uint16",
+                    "name": "",
+                    "type": "uint16"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_amount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint8",
+                    "name": "_period",
+                    "type": "uint8"
+                }
             ],
             "name": "stake",
             "outputs": [],
@@ -54,24 +106,59 @@
             "type": "function"
         },
         {
-            "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
             "name": "stakes",
             "outputs": [
-                { "internalType": "uint256", "name": "amount", "type": "uint256" },
-                { "internalType": "uint256", "name": "startTimestamp", "type": "uint256" },
-                { "internalType": "uint8", "name": "periodNum", "type": "uint8" }
+                {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "startTimestamp",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "stopTimestamp",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint8",
+                    "name": "periodNum",
+                    "type": "uint8"
+                }
             ],
             "stateMutability": "view",
             "type": "function"
         },
         {
-            "inputs": [{ "internalType": "address", "name": "_address", "type": "address" }],
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_address",
+                    "type": "address"
+                }
+            ],
             "name": "transferOwnership",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"
         },
-        { "inputs": [], "name": "unstake", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
+        {
+            "inputs": [],
+            "name": "unstake",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
     ],
     "TokenA": [
         { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },

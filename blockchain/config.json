@@ -1,6 +1,6 @@
 {"ETH": {
     "addresses": {
-      "Staking": "0xD2ceAb951ECeB5EdA9cefa02AcAE95A2F6D49dfD",
+      "Staking": "0xa47F8644DD8b73eB5bf1CE6bCb85fc7abE2Ade8F",
       "TokenA": "0xC7827ca5aAC39A039269B658766aC27e0dbAFda8"
     },
     "provider": "https://speedy-nodes-nyc.moralis.io/98446ed04f340c3f804e2ee6/eth/rinkeby",

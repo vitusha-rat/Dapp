@@ -1,9 +1,9 @@
 <template>
     <div :class="design">
-        <p>
+        <p class="mb-1 text-white">
             {{ title }}
         </p>
-        <input :class="design" type="text" v-model="inputText" />
+        <input :class="design" type="text" v-model="inputText" class="outline-double outline-4 outline-offset-0 outline-blue-400" />
     </div>
 </template>
 
