@@ -1,8 +1,66 @@
 <template>
-    <div class="flex flex-col w-[400px] h-[400px] bg-gradient-to-t from-amber-800 to-green-800 rounded-2xl">
-        <base-input v-model="amount" />
-        <base-button :buttonText="'Stake'" :size="'w-full h-10'" class="bg-slate-500" @press="StakeAmount" />
-        <base-button :buttonText="wallet" :size="'w-full h-10'" class="bg-blue-500" @press="connectMetamask" />
+    <div class="flex flex-col justify-center items-center w-screen h-screen">
+        <base-button
+            :buttonText="isConnected ? wallet.substring(0, 10) + '...' : 'Connect MetaMask'"
+            :size="'w-[200px] h-10'"
+            class="transition bg-transparent ml-[700px] font-semibold font-sans text-lg text-green-600 rounded-xl outline outline-4 hover:bg-blue-400 hover:text-black duration-1000"
+            :class="isConnected ? 'bg-blue-400 text-black' : ''"
+            @press="connectMetamask"
+        />
+        <div class="flex flex-col items-center justify-center w-[400px] h-[400px]">
+            <div class="absolute flex flex-col items-center justify-center w-[400px] h-[400px]" v-if="isLoading">
+                <img src="/imgs/sonic.png" class="animate-spin z-50" />
+                <p class="font-semibold font-sans text-xl text-blue-400 text-center animate-pulse mt-4 z-50">
+                    Transaction is being processed
+                </p>
+            </div>
+            <div
+                class="flex flex-col items-center justify-center w-[400px] h-[400px] bg-gradient-to-t from-amber-800 to-green-800 rounded-2xl"
+                :class="[isLoading ? 'blur-sm ' : '']"
+            >
+                <base-input
+                    v-model="amount"
+                    :design="'flex flex-col w-[300px] h-14 items-center rounded-lg'"
+                    :title="'Amount to Stake'"
+                    class="mb-8 font-semibold font-sans text-lg text-black"
+                />
+                <!-- Period selector component -->
+                <div class="flex flex-row">
+                    <div class="flex flex-col">
+                        <input type="radio" id="1" v-model="period" value="1" />
+                        <label for="1" class="text-center font-semibold font-sans text-lg text-black">30 days 150%</label>
+                    </div>
+                    <div class="flex flex-col">
+                        <input type="radio" id="2" v-model="period" value="2" />
+                        <label for="2" class="text-center font-semibold font-sans text-lg text-black">90 days 200%</label>
+                    </div>
+                    <div class="flex flex-col">
+                        <input type="radio" id="3" v-model="period" value="3" />
+                        <label for="3" class="text-center font-semibold font-sans text-lg text-black">180 days 250%</label>
+                    </div>
+                    <div class="flex flex-col">
+                        <input type="radio" id="4" v-model="period" value="4" />
+                        <label for="4" class="text-center font-semibold font-sans text-lg text-black">test 10 min 100%</label>
+                    </div>
+                </div>
+                <base-button
+                    :buttonText="isStakeHolder ? 'Restake!' : 'Stake!'"
+                    :size="'w-3/4 h-10'"
+                    class="bg-blue-500 rounded-lg font-semibold font-sans text-lg text-black transition hover:scale-105 mt-6"
+                    @press="StakeAmount(amount, period)"
+                />
+                <base-button
+                    :buttonText="'Unstake tokens: ' + stakedAmount.substring(0, 10) + '...'"
+                    :size="'w-3/4 h-10'"
+                    class="bg-yellow-500 rounded-lg font-semibold font-sans text-lg text-black mb-2 mt-4 transition hover:scale-105"
+                    @press="unstake"
+                    v-if="isStakeHolder"
+                />
+                <div class="border-2 border-blue-400 w-3/4 h-[90px] rounded-lg">
+                    <p class="font-semibold font-sans text-lg text-black">{{ time }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -17,21 +75,70 @@ import abis from "../../../blockchain/abis.json";
 const providerETH = new ethers.providers.JsonRpcProvider(config.ETH.provider);
 const Staking = new Contract(config.ETH.addresses.Staking, abis.Staking, providerETH);
 const TokenA = new Contract(config.ETH.addresses.TokenA, abis.TokenA, providerETH);
+const data = { provider: null as null | ethers.providers.Web3Provider, signer: null as null | ethers.providers.JsonRpcSigner };
+const chainId = 4;
 
-const CHAIN_ID = 4;
-
-const provider = ref(null as null | ethers.providers.Web3Provider);
-const signer = ref(null as null | ethers.providers.JsonRpcSigner);
+const isLoading = ref(false);
+const isStakeHolder = ref(false);
+const isConnected = ref(false);
 const wallet = ref("");
 const amount = ref("");
+const stakedAmount = ref("");
+const period = ref("");
+const time = ref("");
 
-async function StakeAmount() {
+// async function getRemainTime() {
+//     try {
+//         const _time = await Staking.connect(data.provider!).getRemainingTime();
+//         console.log(_time);
+//         time.value = BigNumber.from(_time._hex).toString();
+//     } catch (e) {
+//         console.error(e);
+//     }
+// }
+
+async function getInfo(wallet: string) {
     try {
-        await TokenA.connect(signer.value!).approve(config.ETH.addresses.Staking, 100000000);
+        if (wallet == "") {
+            stakedAmount.value = "";
+        } else {
+            const _amount = await Staking.connect(data.provider!).stakes(wallet);
+            stakedAmount.value = ethers.utils.formatEther(BigNumber.from(_amount[0]).toString());
+            if (Number(stakedAmount.value) != 0) {
+                isStakeHolder.value = true;
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function unstake() {
+    try {
+        isLoading.value = true;
+        const tx1 = await Staking.connect(data.signer!).unstake();
+        await tx1.wait();
+        isLoading.value = false;
+        getInfo(wallet.value);
     } catch (error) {
+        isLoading.value = false;
         console.log(error);
     }
-    // await Staking.connect(signer.value!).stake(amount, 1);
+}
+
+async function StakeAmount(amount: string, period: string) {
+    try {
+        const tx = await TokenA.connect(data.signer!).approve(config.ETH.addresses.Staking, BigNumber.from("10000000000000000000000"));
+        isLoading.value = true;
+        await tx.wait();
+        const tx2 = await Staking.connect(data.signer!).stake(ethers.utils.parseUnits(amount, 18), period);
+        await tx2.wait();
+        isLoading.value = false;
+        getInfo(wallet.value);
+    } catch (error) {
+        isLoading.value = false;
+        console.log(error);
+    }
 }
 
 async function connectMetamask() {
@@ -44,18 +151,17 @@ async function connectMetamask() {
                 method: "eth_requestAccounts",
             })
         )[0] as string;
+        data.provider = new providers.Web3Provider(((window as any).ethereum as any) || (window as any).web3);
 
-        provider.value = new providers.Web3Provider(((window as any).ethereum as any) || (window as any).web3);
-        console.log(provider);
-        signer.value = provider.value.getSigner();
-        console.log(signer);
-
+        data.signer = data.provider.getSigner();
         await function updateChainId() {
             ((window as any).ethereum as any).once("chainChanged", async (chainId: string) => {
                 await connectMetamask();
             });
             ((window as any).ethereum as any).once("accountsChanged", handleWalletChanged);
         };
+        getInfo(wallet.value);
+        isConnected.value = true;
         // if (chainId !== Number(config.ETH.chainId)) await switchChainIdBSC()
     } catch (error) {
         console.error(error);
@@ -63,7 +169,7 @@ async function connectMetamask() {
 }
 
 async function updateChainId() {
-    const chainId = (await provider.value?.getNetwork())?.chainId || null;
+    const chainId = (await data.provider?.getNetwork())?.chainId || null;
 }
 async function handleWalletChanged(addresses: string[]) {
     if (addresses[0]) {

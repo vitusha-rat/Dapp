@@ -1,9 +1,9 @@
 <template>
-    <div class="flex flex-col items-center justify-center">
-        <p :class="design">
+    <div :class="design">
+        <p>
             {{ title }}
         </p>
-        <input type="text" v-model="inputText" />
+        <input :class="design" type="text" v-model="inputText" />
     </div>
 </template>
 
@@ -14,13 +14,14 @@ const props = defineProps<{
     modelValue: string;
     title?: string;
     design?: string;
+    inputClass?: string;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);
 
 const inputText = ref(props.modelValue);
 
-watch(inputText, (oldValue, newValue) => {
+watch(inputText, (newValue, oldValue) => {
     emit("update:modelValue", newValue);
 });
 </script>
